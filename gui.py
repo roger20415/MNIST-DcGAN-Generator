@@ -7,6 +7,7 @@ from PyQt5.QtGui import QPixmap
 import matplotlib.pyplot as plt
 from matplotlib import image
 
+from augmented_images import ImageAugmentationShower
 from config import Config
 
 
@@ -39,6 +40,7 @@ class ButtonColumn(BaseColumn):
     def __init__(self, parent_widget) -> None:
         self._parent_widget = parent_widget
         self._inference_image_path: str = None
+        self.image_augmentation_shower = ImageAugmentationShower()
         
     def create_column(self) -> QGroupBox:
         group = QGroupBox()
@@ -67,8 +69,7 @@ class ButtonColumn(BaseColumn):
         return group
     
     def _handle_show_training_images(self) -> None:
-        images, image_names = ImageAugmentationShower.augment_images(Config.AUGMENTATION_IMAGE_FOLDER_PATH)
-        ImageAugmentationShower.show_images(images, image_names)
+        self.image_augmentation_shower.show_original_augmented_compare_plot()
     
     def _handle_show_model_structure(self) -> None:
         pass
@@ -92,18 +93,6 @@ class ButtonColumn(BaseColumn):
         axes[1].set_title('Loss')
 
         plt.show()
-        """
-        
-    def _load_image(self) -> None:
-        pass
-        """
-        options = QFileDialog.Options()
-        file, _ = QFileDialog.getOpenFileName(self._parent_widget, "Open Image", "", "PNG Files (*.png);;All Files (*)", options=options)
-        
-        if file:
-            self._inference_image_path = file
-            print(f"Selected Image Path: {self._inference_image_path}")
-            self._show_inference_image(self._inference_image_path)
         """
     
     def _show_inference_image(self, image_path: str) -> None:
