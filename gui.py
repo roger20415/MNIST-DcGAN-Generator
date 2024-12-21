@@ -7,7 +7,7 @@ from PyQt5.QtGui import QPixmap
 import matplotlib.pyplot as plt
 from matplotlib import image
 
-from augmented_images import ImageAugmentationShower
+from augmented_images import ImageAugmentationer
 from config import Config
 
 
@@ -40,7 +40,7 @@ class ButtonColumn(BaseColumn):
     def __init__(self, parent_widget) -> None:
         self._parent_widget = parent_widget
         self._inference_image_path: str = None
-        self.image_augmentation_shower = ImageAugmentationShower()
+        self.image_augmentationer = ImageAugmentationer()
         
     def create_column(self) -> QGroupBox:
         group = QGroupBox()
@@ -69,7 +69,7 @@ class ButtonColumn(BaseColumn):
         return group
     
     def _handle_show_training_images(self) -> None:
-        self.image_augmentation_shower.show_original_augmented_compare_plot()
+        self.image_augmentationer.show_original_augmented_compare_plot()
     
     def _handle_show_model_structure(self) -> None:
         pass

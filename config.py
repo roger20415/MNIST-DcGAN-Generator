@@ -8,10 +8,12 @@ class Config:
     
     NZ = 100
     NGF = 64
-    NC = 1 
+    NC = 3 
     NDF = 64
     
     NGPU = 1
     
     LR = 0.0002
     BETA1 = 0.5
+    
+    EPOCHS = 1

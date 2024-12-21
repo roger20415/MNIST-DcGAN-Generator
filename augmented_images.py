@@ -14,7 +14,7 @@ from config import Config
 
 COMMON_SEED = 42
 
-class ImageAugmentationShower:
+class ImageAugmentationer:
 
     def show_original_augmented_compare_plot(self) -> None:
         if not os.path.exists(Config.ORIGINAL_DATASET_PLOT_PATH):
@@ -29,12 +29,13 @@ class ImageAugmentationShower:
 
     def _load_mnist(self) -> DataLoader:
         self._set_random_seed(COMMON_SEED)
-        transform  = transforms.Compose([
-                                    transforms.Resize(28),
-                                    transforms.CenterCrop(28),
-                                    transforms.ToTensor(),
-                                    transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
-                                ])
+        transform = v2.Compose([
+            v2.Resize(64),
+            v2.CenterCrop(64),
+            v2.ToImage(),
+            v2.ToDtype(torch.float32, scale=True),
+            v2.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
+        ])
 
         dataset = dset.ImageFolder(root=Config.MNIST_FOLDER_PATH,
                                 transform=transform)
@@ -46,6 +47,8 @@ class ImageAugmentationShower:
     def _load_and_augment_mnist(self) -> DataLoader:
         self._set_random_seed(COMMON_SEED)
         augmented_transform = v2.Compose([
+            v2.Resize(64),
+            v2.CenterCrop(64),
             v2.RandomRotation(30),
             v2.ToImage(),
             v2.ToDtype(torch.float32, scale=True),
@@ -65,7 +68,7 @@ class ImageAugmentationShower:
         device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
         augmented_batch = next(iter(dataloader))
-        plt.figure(figsize=(8, 8))
+        plt.figure(figsize=(64, 64))
         plt.axis("off")
         plt.title(title)
         plt.imshow(
@@ -98,5 +101,5 @@ class ImageAugmentationShower:
 
 
 if __name__ == "__main__":  
-    image_augmentation_shower = ImageAugmentationShower()
-    image_augmentation_shower.show_original_augmented_compare_plot()
+    image_augmentationer= ImageAugmentationer()
+    image_augmentationer.show_original_augmented_compare_plot()
