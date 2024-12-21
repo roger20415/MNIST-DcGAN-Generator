@@ -2,6 +2,7 @@ import torch
 from torch import nn, optim
 from torch.utils.data import DataLoader
 import torchvision.utils as vutils
+from matplotlib import pyplot as plt
 
 from generator import Generator
 from discriminator import Discriminator
@@ -122,6 +123,21 @@ class trainer:
                     img_list.append(vutils.make_grid(fake, padding=2, normalize=True))
 
                 iters += 1
+                
+                self._save_loss_plot(G_losses, D_losses)
+                
+        torch.save(self.netG.state_dict(), Config.NET_G_PATH)
+        torch.save(self.netD.state_dict(), Config.NET_D_PATH)
+                
+    def _save_loss_plot(self, G_losses: list, D_losses: list) -> None:
+        plt.figure(figsize=(10,5))
+        plt.title("Generator and Discriminator Loss During Training")
+        plt.plot(G_losses,label="G")
+        plt.plot(D_losses,label="D")
+        plt.xlabel("iterations")
+        plt.ylabel("Loss")
+        plt.legend()
+        plt.savefig(Config.LOSS_PLOT_PATH)
         
 
 

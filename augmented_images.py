@@ -2,7 +2,6 @@ import os
 
 import torch
 from torch.utils.data import DataLoader
-from torchvision import transforms
 import torchvision.utils as vutils
 from torchvision.transforms import v2
 from torchvision import datasets as dset
@@ -30,8 +29,7 @@ class ImageAugmentationer:
     def _load_mnist(self) -> DataLoader:
         self._set_random_seed(COMMON_SEED)
         transform = v2.Compose([
-            v2.Resize(64),
-            v2.CenterCrop(64),
+            v2.Resize(Config.NGF),
             v2.ToImage(),
             v2.ToDtype(torch.float32, scale=True),
             v2.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
@@ -47,8 +45,7 @@ class ImageAugmentationer:
     def _load_and_augment_mnist(self) -> DataLoader:
         self._set_random_seed(COMMON_SEED)
         augmented_transform = v2.Compose([
-            v2.Resize(64),
-            v2.CenterCrop(64),
+            v2.Resize(Config.NGF),
             v2.RandomRotation(30),
             v2.ToImage(),
             v2.ToDtype(torch.float32, scale=True),
