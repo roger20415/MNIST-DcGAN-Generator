@@ -1,14 +1,12 @@
 from abc import ABC, abstractmethod
 
-from PyQt5.QtWidgets import (QWidget, QGroupBox, QVBoxLayout, QHBoxLayout, 
-                             QPushButton, QLabel, QSizePolicy, QFileDialog)
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPixmap
-import matplotlib.pyplot as plt
-from matplotlib import image
+from PyQt5.QtWidgets import (QWidget, QGroupBox, 
+                             QVBoxLayout, QHBoxLayout, 
+                             QPushButton)
 
 from augmented_images import ImageAugmentationer
-from config import Config
+from train import Trainer
+from inference import Inferencer
 
 
 class Gui(QWidget):
@@ -41,6 +39,8 @@ class ButtonColumn(BaseColumn):
         self._parent_widget = parent_widget
         self._inference_image_path: str = None
         self.image_augmentationer = ImageAugmentationer()
+        self.trainer = Trainer()
+        self.inferencer = Inferencer()
         
     def create_column(self) -> QGroupBox:
         group = QGroupBox()
@@ -59,7 +59,7 @@ class ButtonColumn(BaseColumn):
         layout.addWidget(show_training_loss_button)
 
         inference_button = QPushButton("Inference")
-        inference_button.clicked.connect(lambda: self._handle_inference())
+        inference_button.clicked.connect(lambda: self._show_inference_plot())
         layout.addWidget(inference_button)
 
         group.setLayout(layout)
@@ -72,57 +72,11 @@ class ButtonColumn(BaseColumn):
         self.image_augmentationer.show_original_augmented_compare_plot()
     
     def _handle_show_model_structure(self) -> None:
-        pass
-        """
-        self.vgg_trainer.show_vgg_structure()
-        """
+        self.trainer.show_netG_structure()
+        self.trainer.show_netD_structure()
+        
+    def _handle_show_training_loss(self) -> None:
+        self.trainer.show_loss_plot()
     
-    def _handle_show_accuracy_loss(self) -> None:
-        pass
-        """
-        acc_img = image.imread(Config.ACC_PLOT_PATH)
-        val_img = image.imread(Config.LOSS_PLOT_PATH)
-
-        _, axes = plt.subplots(2, 1, figsize=(6, 9))
-        axes[0].imshow(acc_img)
-        axes[0].axis('off')
-        axes[0].set_title('Accuracy')
-
-        axes[1].imshow(val_img)
-        axes[1].axis('off')
-        axes[1].set_title('Loss')
-
-        plt.show()
-        """
-    
-    def _show_inference_image(self, image_path: str) -> None:
-        pass
-        """
-        pixmap = QPixmap(image_path)
-        pixmap = pixmap.scaled(128, 128, Qt.KeepAspectRatio)
-        self.display_column.image_label.setPixmap(pixmap)
-        self.display_column.image_label.setAlignment(Qt.AlignLeft)
-        """
-    
-    def _handle_inference(self) -> None:
-        pass
-        """
-        predicted_label: str = self.vgg_inferencer.inference(self._inference_image_path)
-        self._show_inference_result(predicted_label)
-        self._show_probalility_bar()
-        """
-    
-    def _show_inference_result(self, predicted_label: str) -> None:
-        pass
-        """
-        self.display_column.predict_label.setText(f"Predicted: {predicted_label}")
-        """
-    
-    def _show_probalility_bar(self) -> None:
-        pass
-        """
-        prob_bar = image.imread(Config.PROBABILITY_BAR_PATH)
-        plt.imshow(prob_bar)
-        plt.axis('off')
-        plt.show()
-        """
+    def _show_inference_plot(self) -> None:
+        self.inferencer.show_inference_plot()

@@ -1,3 +1,5 @@
+import os
+
 import torch
 from torch import nn, optim
 from torch.utils.data import DataLoader
@@ -10,7 +12,7 @@ from config import Config
 from weight_initer import WeightIniter
 from augmented_images import ImageAugmentationer
 
-class trainer:
+class Trainer:
     def __init__(self) -> None:
         self.image_augmentation_shower = ImageAugmentationer()
         self.device = torch.device("cuda:0" if (torch.cuda.is_available() and Config.NGPU > 0) else "cpu")
@@ -38,8 +40,20 @@ class trainer:
     
     def show_netD_structure(self) -> None:
         print(self.netD)
+
+    def show_loss_plot(self) -> None:
+        if os.path.exists(Config.LOSS_PLOT_PATH):
+            img = plt.imread(Config.LOSS_PLOT_PATH)
+            plt.figure(figsize=(10, 5))
+            plt.imshow(img)
+            plt.axis('off')
+            plt.show()
+        else:
+            print("Loss plot does not exist. Train the model first.")
+            self._training()
         
-    def training(self) -> None:
+        
+    def _training(self) -> None:
         # Training Loop
 
         # Lists to keep track of progress
@@ -138,11 +152,3 @@ class trainer:
         plt.ylabel("Loss")
         plt.legend()
         plt.savefig(Config.LOSS_PLOT_PATH)
-        
-
-
-if __name__ == "__main__":
-    trainer = trainer()
-    trainer.show_netG_structure()
-    trainer.show_netD_structure()
-    trainer.training()

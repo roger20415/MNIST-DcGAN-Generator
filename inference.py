@@ -64,8 +64,3 @@ class Inferencer:
         plt.savefig(Config.INFERENCE_PLOT_PATH)
         plt.close()
     
-    
-if __name__ == "__main__":
-    inferencer = Inferencer()
-    inferencer.show_inference_plot()
-    

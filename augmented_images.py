@@ -95,8 +95,3 @@ class ImageAugmentationer:
         axes[1].imshow(plot2)
         axes[1].axis("off")
         plt.show()
-
-
-if __name__ == "__main__":  
-    image_augmentationer= ImageAugmentationer()
-    image_augmentationer.show_original_augmented_compare_plot()
