@@ -4,3 +4,14 @@ class Config:
     AUGMENTED_DATASET_PLOT_PATH: str = "./plot/augmented_dataset_plot.png"
     
     BATCH_SIZE: int = 64
+    
+    
+    NZ = 100
+    NGF = 64
+    NC = 1 
+    NDF = 64
+    
+    NGPU = 1
+    
+    LR = 0.0002
+    BETA1 = 0.5
