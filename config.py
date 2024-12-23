@@ -5,7 +5,6 @@ class Config:
     LOSS_PLOT_PATH: str = "./plot/loss_plot.png"
     NET_G_PATH: str = "./models/generator.pth"
     NET_D_PATH: str = "./models/discriminator.pth"
-    INFERENCE_PLOT_PATH: str = "./plot/inference_plot.png"
     
     BATCH_SIZE: int = 64
     
@@ -20,4 +19,4 @@ class Config:
     LR: float = 0.0002
     BETA1: float = 0.5
     
-    EPOCHS: int  = 80
+    EPOCHS: int  = 10

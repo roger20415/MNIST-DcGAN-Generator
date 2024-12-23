@@ -15,20 +15,8 @@ class Inferencer:
         self.image_augmentationer = ImageAugmentationer()
 
     def show_inference_plot(self) -> None:
-        if os.path.exists(Config.INFERENCE_PLOT_PATH):
-            print(f"Inference plot already exists at {Config.INFERENCE_PLOT_PATH}")
-            img = plt.imread(Config.INFERENCE_PLOT_PATH)
-            plt.imshow(img)
-            plt.axis("off")
-            plt.show()
-        else:
-            print("Inference plot does not exist. Running inference and saving the plot...")
-            real_batch, fake_images = self.inference()
-            self._save_inference_images(real_batch, fake_images)
-            img = plt.imread(Config.INFERENCE_PLOT_PATH)
-            plt.imshow(img)
-            plt.axis("off")
-            plt.show()
+        real_batch, fake_images = self.inference()
+        self._show_inference_images(real_batch, fake_images)
     
     def inference(self) -> tuple[torch.Tensor, torch.Tensor]:
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -49,7 +37,7 @@ class Inferencer:
         
         return real_batch, fake_images
     
-    def _save_inference_images(self, real_batch: torch.Tensor, fake_images: torch.Tensor) -> None:
+    def _show_inference_images(self, real_batch: torch.Tensor, fake_images: torch.Tensor) -> None:
         plt.figure(figsize=(15, 15))
 
         plt.subplot(1, 2, 1)
@@ -61,6 +49,6 @@ class Inferencer:
         plt.axis("off")
         plt.title("Fake Images")
         plt.imshow(np.transpose(make_grid(fake_images, padding=2, normalize=True), (1, 2, 0)))
-        plt.savefig(Config.INFERENCE_PLOT_PATH)
-        plt.close()
+
+        plt.show()
     
