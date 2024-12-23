@@ -20,4 +20,4 @@ class Config:
     LR: float = 0.0002
     BETA1: float = 0.5
     
-    EPOCHS: int  = 1
+    EPOCHS: int  = 80

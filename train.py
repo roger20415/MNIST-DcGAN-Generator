@@ -17,15 +17,29 @@ class Trainer:
         self.image_augmentation_shower = ImageAugmentationer()
         self.device = torch.device("cuda:0" if (torch.cuda.is_available() and Config.NGPU > 0) else "cpu")
         
+        # Initialize Generator
         self.netG = Generator(Config.NGPU).to(self.device)
+        if os.path.exists(Config.NET_G_PATH):
+            print(f"Loading Generator weights from {Config.NET_G_PATH}")
+            self.netG.load_state_dict(torch.load(Config.NET_G_PATH, map_location=self.device))
+        else:
+            print("Initializing new Generator weights.")
+            self.netG.apply(WeightIniter.weights_init)
+        
         if (self.device.type == 'cuda') and (Config.NGPU > 1):
             self.netG = nn.DataParallel(self.netG, list(range(Config.NGPU)))
-        self.netG.apply(WeightIniter.weights_init)
-            
+
+        # Initialize Discriminator
         self.netD = Discriminator(Config.NGPU).to(self.device)
+        if os.path.exists(Config.NET_D_PATH):
+            print(f"Loading Discriminator weights from {Config.NET_D_PATH}")
+            self.netD.load_state_dict(torch.load(Config.NET_D_PATH, map_location=self.device))
+        else:
+            print("Initializing new Discriminator weights.")
+            self.netD.apply(WeightIniter.weights_init)
+        
         if (self.device.type == 'cuda') and (Config.NGPU > 1):
             self.netD = nn.DataParallel(self.netD, list(range(Config.NGPU)))
-        self.netD.apply(WeightIniter.weights_init)
     
         
         self.criterion = nn.BCELoss()
@@ -138,7 +152,7 @@ class Trainer:
 
                 iters += 1
                 
-                self._save_loss_plot(G_losses, D_losses)
+            self._save_loss_plot(G_losses, D_losses)
                 
         torch.save(self.netG.state_dict(), Config.NET_G_PATH)
         torch.save(self.netD.state_dict(), Config.NET_D_PATH)
@@ -152,3 +166,10 @@ class Trainer:
         plt.ylabel("Loss")
         plt.legend()
         plt.savefig(Config.LOSS_PLOT_PATH)
+        
+if __name__ == "__main__":
+    trainer = Trainer()
+    trainer._training()
+    trainer.show_loss_plot()
+    trainer.show_netG_structure()
+    trainer.show_netD_structure()
