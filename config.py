@@ -8,7 +8,6 @@ class Config:
     
     BATCH_SIZE: int = 64
     
-    
     NZ: int = 100
     NGF: int  = 64
     NC: int  = 3 
